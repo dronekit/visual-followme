@@ -6,7 +6,7 @@ from pid import Pid, print_graph
 from red_blob_detection import RedBlobDetector
 
 
-controller = Pid(kp=0.36, ki=0.05, kd=2.4)
+controller = Pid(kp=0.2, ki=0.05, kd=0.2)
 
 vision_algorithm = RedBlobDetector()
 
@@ -15,6 +15,13 @@ def move_camera(vehicle, pwm):
         msg = vehicle.message_factory.rc_channels_override_encode(1, 1, 0, 0, 0, 0, 0, pwm, 0, 0)
         vehicle.send_mavlink(msg)
         vehicle.flush()
+
+def disable_camera(vehicle):
+    if vehicle:
+        msg = vehicle.message_factory.rc_channels_override_encode(1, 1, 0, 0, 0, 0, 0, 0, 0, 0)
+        vehicle.send_mavlink(msg)
+        vehicle.flush()
+
 
 def process_stream(video_in, logger, vehicle=None):
     if not video_in.isOpened():
@@ -33,7 +40,9 @@ def process_stream(video_in, logger, vehicle=None):
         ch = 0xFF & cv2.waitKey(5)
         if ch == 27:
             break        
-    
+
+    disable_camera(vehicle)
+
     if logger:
         logger.close()
     cv2.destroyAllWindows()
