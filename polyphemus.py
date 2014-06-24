@@ -35,7 +35,9 @@ while True:
     if biggest_contour != None:
         ball_centroid=cv2.moments(biggest_contour)
         cx,cy = int(ball_centroid['m10']/ball_centroid['m00']), int(ball_centroid['m01']/ball_centroid['m00'])
-        cv2.circle(frame,(cx,cy),4,(200,110,255),3)
+        cv2.circle(frame,(cx,cy),4,(20,255,60),5)
+        cv2.line(frame,(0,cy),(frame.shape[1],cy),(20,255,60),1)
+        cv2.line(frame,(cx,0),(cx,frame.shape[0]),(20,255,60),1)
     
     cv2.imshow("frame",frame)
     ch = 0xFF & cv2.waitKey(5)
