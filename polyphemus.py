@@ -4,10 +4,22 @@ import numpy as np
 import cv2
 
 cam = cv2.VideoCapture(0)
+hist = np.array([[255.],[0.],[0.],[0.],[0.],[0.],[0.],[0.],[0.],[0.],[0.],[0.],[0.],[0.],[0.],[255.]])
+hist = hist.astype(np.float32, copy=False)
 
 while True:
     _, frame = cam.read()
-    cv2.imshow("frame",frame)
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv, np.array((0., 150., 0.)), np.array((180., 255., 255.)))#ignore pixels that are black or gray
+    prob = cv2.calcBackProject([hsv], [0], hist, [0, 180], 1)
+    #prob is a binary image with all red pixels represented as 1's
+    prob &= mask
+    
+    #clean it up with some morphology
+    erode = cv2.erode(prob,None,iterations = 1)
+    dilated = cv2.dilate(erode,None,iterations = 2)
+    binary_img = cv2.erode(dilated,None,iterations = 1) 
+    cv2.imshow("frame",binary_img)
     ch = 0xFF & cv2.waitKey(5)
     if ch == 27:
         break
