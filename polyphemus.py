@@ -27,12 +27,22 @@ def detect_target(cv2, hist, np, frame):
     biggest_contour = detect_biggest_polygon(cv2, binary_img)
     return biggest_contour
 
+
+
+
 def filter_red_pixels(cv2, hist, np, frame):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    mask = cv2.inRange(hsv, np.array((0., 150., 0.)), np.array((180., 255., 255.)))  # ignore pixels that are black or gray
+    unsaturated_pixels = discard_saturated_pixels(cv2, np, hsv)  
+    red_pixels = filter_by_color(cv2, hist, hsv)
+    red_pixels &= unsaturated_pixels
+    return red_pixels
+
+def discard_saturated_pixels(cv2, np, hsv):
+    mask = cv2.inRange(hsv, np.array((0., 150., 0.)), np.array((180., 255., 255.)))
+    return mask
+
+def filter_by_color(cv2, hist, hsv):
     prob = cv2.calcBackProject([hsv], [0], hist, [0, 180], 1)
-    # prob is a binary image with all red pixels represented as 1's
-    prob &= mask
     return prob
 
 def clean_up_with_morphology(cv2, prob):
