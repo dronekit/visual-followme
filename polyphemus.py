@@ -32,9 +32,12 @@ while True:
         biggest_contour=contours[biggest_contour_index]
     
     #draw some stuff out of a bad spy movie
+    if biggest_contour != None:
+        ball_centroid=cv2.moments(biggest_contour)
+        cx,cy = int(ball_centroid['m10']/ball_centroid['m00']), int(ball_centroid['m01']/ball_centroid['m00'])
+        cv2.circle(frame,(cx,cy),4,(200,110,255),3)
     
-    
-    cv2.imshow("frame",binary_img)
+    cv2.imshow("frame",frame)
     ch = 0xFF & cv2.waitKey(5)
     if ch == 27:
         break
