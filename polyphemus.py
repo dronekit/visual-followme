@@ -19,6 +19,21 @@ while True:
     erode = cv2.erode(prob,None,iterations = 1)
     dilated = cv2.dilate(erode,None,iterations = 2)
     binary_img = cv2.erode(dilated,None,iterations = 1) 
+    
+    #detect biggest polygon
+    binary_img_to_process = binary_img.copy()#contour detection will mess up the image
+    contours,hierarchy = cv2.findContours(binary_img_to_process,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+    biggest_contour=None
+    if contours != []:
+        biggest_contour_index = 0
+        for i in range(1,len(contours)):       
+            if cv2.contourArea(contours[i])>cv2.contourArea(contours[biggest_contour_index]):
+                biggest_contour_index = i
+        biggest_contour=contours[biggest_contour_index]
+    
+    #draw some stuff out of a bad spy movie
+    
+    
     cv2.imshow("frame",binary_img)
     ch = 0xFF & cv2.waitKey(5)
     if ch == 27:
