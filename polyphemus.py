@@ -67,11 +67,18 @@ def detect_biggest_polygon(cv2, binary_img):
 def render_crosshairs(cv2, frame, biggest_contour):
     if biggest_contour != None:
         green = 20, 255, 60
-        ball_centroid = cv2.moments(biggest_contour)
-        cx, cy = int(ball_centroid['m10'] / ball_centroid['m00']), int(ball_centroid['m01'] / ball_centroid['m00'])
-        cv2.circle(frame, (cx, cy), 4, green, 5)
-        cv2.line(frame, (0, cy), (frame.shape[1], cy), green, 1)
-        cv2.line(frame, (cx, 0), (cx, frame.shape[0]), green, 1)
+        contour_centroid = cv2.moments(biggest_contour)
+        print contour_centroid
+        
+        try:
+            cx, cy = int(contour_centroid['m10'] / contour_centroid['m00']), int(contour_centroid['m01'] / contour_centroid['m00'])
+            cv2.circle(frame, (cx, cy), 4, green, 5)
+            cv2.line(frame, (0, cy), (frame.shape[1], cy), green, 1)
+            cv2.line(frame, (cx, 0), (cx, frame.shape[0]), green, 1)
+        except:
+            print "error caught"
+            pass
+
 
 
 
