@@ -9,10 +9,10 @@ def main():
     hist = hist.astype(np.float32, copy=False)
     while True:
         frame = get_frame(cam)
+        writer.write(frame)
         biggest_contour = detect_target(cv2, hist, np, frame)
         render_crosshairs(cv2, frame, biggest_contour)
         cv2.imshow("frame", frame)
-        writer.write(frame)
         ch = 0xFF & cv2.waitKey(5)
         if ch == 27:
             return
@@ -76,8 +76,8 @@ def render_crosshairs(cv2, frame, biggest_contour):
 
 if __name__ == '__main__':
     writer = cv2.VideoWriter(filename="demo.avi",  #Provide a file to write the video to
-                             fourcc=-1,            #bring up codec dialog box
-                             fps=30,
+                             fourcc=cv2.cv.CV_FOURCC('P','I','M','1'),            #bring up codec dialog box
+                             fps=20,
                              frameSize=(640, 480))
     try:
         main()
