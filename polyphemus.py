@@ -2,6 +2,7 @@
 
 import numpy as np
 import cv2
+import glob
 
 def main():
     cam = cv2.VideoCapture(0)
@@ -75,7 +76,9 @@ def render_crosshairs(cv2, frame, biggest_contour):
             pass
 
 if __name__ == '__main__':
-    writer = cv2.VideoWriter(filename="demo.avi",  #Provide a file to write the video to
+    video_counter = len(glob.glob1("./vids","*.avi"))
+    file = "./vids/demo_" + str(video_counter) + ".avi"
+    writer = cv2.VideoWriter(filename=file,  #Provide a file to write the video to
                              fourcc=cv2.cv.CV_FOURCC('P','I','M','1'),            #bring up codec dialog box
                              fps=30,
                              frameSize=(640, 480))
