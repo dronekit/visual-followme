@@ -74,4 +74,8 @@ def render_crosshairs(cv2, frame, biggest_contour):
             pass
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print "KeyboardInterrupt detected."
+    cv2.destroyAllWindows()
