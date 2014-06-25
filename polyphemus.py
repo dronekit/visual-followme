@@ -12,6 +12,7 @@ def main():
         biggest_contour = detect_target(cv2, hist, np, frame)
         render_crosshairs(cv2, frame, biggest_contour)
         cv2.imshow("frame", frame)
+        writer.write(frame)
         ch = 0xFF & cv2.waitKey(5)
         if ch == 27:
             return
@@ -74,8 +75,13 @@ def render_crosshairs(cv2, frame, biggest_contour):
             pass
 
 if __name__ == '__main__':
+    writer = cv2.VideoWriter(filename="demo.avi",  #Provide a file to write the video to
+                             fourcc=-1,            #bring up codec dialog box
+                             fps=30,
+                             frameSize=(640, 480))
     try:
         main()
     except KeyboardInterrupt:
         print "KeyboardInterrupt detected."
     cv2.destroyAllWindows()
+    writer.release()
