@@ -36,8 +36,9 @@ def get_frame(input):
 
 if __name__ == '__main__':
     record = len(sys.argv) >= 2 and sys.argv[1] == "--record"
-    video_counter = len(glob.glob1("./vids", "*.avi"))
-    file = "./vids/demo_" + str(video_counter) + ".avi"
+    record = True
+    video_counter = len(glob.glob1("../vids", "*.avi"))
+    file = "../vids/demo_" + str(video_counter) + ".avi"
     if record:
         writer = cv2.VideoWriter(filename=file,  # Provide a file to write the video to
                              fourcc=cv2.cv.CV_FOURCC('P', 'I', 'M', '1'),  # bring up codec dialog box
