@@ -7,11 +7,17 @@ import glob
 import numpy as np
 
 def main():
-    cam = cv2.VideoCapture(0)
+    video_in = None
+    if len(sys.argv) >= 2 and sys.argv[1][:8] == "--input=":
+        video_in = cv2.VideoCapture(sys.argv[1][8:])
+        print sys.argv[1][8:]
+    else:
+        video_in = cv2.VideoCapture(0)
+        
     hist = np.array([[255.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [255.]])
     hist = hist.astype(np.float32, copy=False)
     while True:
-        frame = get_frame(cam)
+        frame = get_frame(video_in)
         if record:
             print "recording"
             writer.write(frame)
@@ -22,8 +28,8 @@ def main():
         if ch == 27:
             return
 
-def get_frame(cam):
-    _, frame = cam.read()
+def get_frame(input):
+    _, frame = input.read()
     return frame
 
 def detect_target(cv2, hist, np, frame):
