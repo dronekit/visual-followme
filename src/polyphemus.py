@@ -16,7 +16,9 @@ def main():
         print sys.argv[1][8:]
     else:
         video_in.open(0)
-    print "video input working? " + str(video_in.isOpened())    
+    if not video_in.isOpened():
+        print "Could not open Video Stream.  Bad file name or missing camera."
+        sys.exit(-1)
     hist = np.array([[255.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [255.]])
     hist = hist.astype(np.float32, copy=False)
     while True:
