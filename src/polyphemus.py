@@ -28,7 +28,10 @@ def main():
             return
 
 def get_frame(input):
-    _, frame = input.read()
+    f, frame = input.read()
+    if not f:
+        print "Reached EOF or webcam disconnected"
+        sys.exit(0) 
     return frame
 
 if __name__ == '__main__':
