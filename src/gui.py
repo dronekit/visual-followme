@@ -1,4 +1,7 @@
-def render_crosshairs(cv2, frame, biggest_contour):
+
+import cv2
+
+def render_crosshairs(frame, biggest_contour):
     if biggest_contour != None:
         green = 20, 255, 60
         contour_centroid = cv2.moments(biggest_contour)

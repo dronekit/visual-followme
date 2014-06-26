@@ -18,8 +18,8 @@ def main():
         if record:
             print "recording"
             writer.write(frame)
-        target = detect_target(cv2, hist, np, frame)
-        render_crosshairs(cv2, frame, target)
+        target = detect_target(hist, frame)
+        render_crosshairs(frame, target)
         cv2.imshow("frame", frame)
         ch = 0xFF & cv2.waitKey(5)
         if ch == 27:
@@ -31,11 +31,11 @@ def get_frame(cam):
 
 if __name__ == '__main__':
     record = len(sys.argv) >= 2 and sys.argv[1] == "--record"
-    video_counter = len(glob.glob1("./vids","*.avi"))
+    video_counter = len(glob.glob1("./vids", "*.avi"))
     file = "./vids/demo_" + str(video_counter) + ".avi"
     if record:
-        writer = cv2.VideoWriter(filename=file,  #Provide a file to write the video to
-                             fourcc=cv2.cv.CV_FOURCC('P','I','M','1'),            #bring up codec dialog box
+        writer = cv2.VideoWriter(filename=file,  # Provide a file to write the video to
+                             fourcc=cv2.cv.CV_FOURCC('P', 'I', 'M', '1'),  # bring up codec dialog box
                              fps=30,
                              frameSize=(640, 480))
     try:
