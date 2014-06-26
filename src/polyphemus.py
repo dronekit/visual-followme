@@ -16,16 +16,16 @@ def main():
         print sys.argv[1][8:]
     else:
         video_in.open(0)
-        
+    print "video input working? " + str(video_in.isOpened())    
     hist = np.array([[255.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [255.]])
     hist = hist.astype(np.float32, copy=False)
     while True:
         frame = get_frame(video_in)
         if record:
             writer.write(frame)
-        cv2.imshow("frame", frame)
         target = detect_target(hist, frame)
         render_crosshairs(frame, target)
+        cv2.imshow("frame", frame)
         ch = 0xFF & cv2.waitKey(5)
         if ch == 27:
             return
