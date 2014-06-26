@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
-import numpy as np
+import sys
+
 import cv2
 import glob
-import sys
+import numpy as np
 
 def main():
     cam = cv2.VideoCapture(0)
