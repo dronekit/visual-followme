@@ -18,8 +18,8 @@ def main():
         if record:
             print "recording"
             writer.write(frame)
-        biggest_contour = detect_target(cv2, hist, np, frame)
-        render_crosshairs(cv2, frame, biggest_contour)
+        target = detect_target(cv2, hist, np, frame)
+        render_crosshairs(cv2, frame, target)
         cv2.imshow("frame", frame)
         ch = 0xFF & cv2.waitKey(5)
         if ch == 27:

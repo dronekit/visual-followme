@@ -1,8 +1,8 @@
 def detect_target(cv2, hist, np, frame):
     prob = filter_red_pixels(cv2, hist, np, frame)
     binary_img = clean_up_with_morphology(cv2, prob)
-    biggest_contour = detect_biggest_polygon(cv2, binary_img)
-    return biggest_contour
+    target = detect_biggest_polygon(cv2, binary_img)
+    return target
 
 def filter_red_pixels(cv2, hist, np, frame):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
