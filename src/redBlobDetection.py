@@ -3,15 +3,15 @@ import cv2
 import numpy as np
 
 def detect_target(hist, frame):
-    prob = filter_red_pixels(cv2, hist, frame)
-    binary_img = clean_up_with_morphology(cv2, prob)
-    target = detect_biggest_polygon(cv2, binary_img)
+    prob = filter_red_pixels(hist, frame)
+    binary_img = clean_up_with_morphology(prob)
+    target = detect_biggest_polygon(binary_img)
     return target
 
 def filter_red_pixels(hist, frame):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    unsaturated_pixels = discard_saturated_pixels(cv2, hsv)  
-    red_pixels = filter_by_color(cv2, hist, hsv)
+    unsaturated_pixels = discard_saturated_pixels(hsv)  
+    red_pixels = filter_by_color(hist, hsv)
     red_pixels &= unsaturated_pixels
     return red_pixels
 
