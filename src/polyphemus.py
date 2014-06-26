@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import sys
+import argparse
 
 import cv2
 import glob
@@ -10,12 +11,6 @@ from gui import render_crosshairs
 from redBlobDetection import detect_target
 
 def main():
-    video_in = cv2.VideoCapture()
-    if len(sys.argv) >= 2 and sys.argv[1][:8] == "--input=":
-        video_in.open(sys.argv[1][8:])
-        print sys.argv[1][8:]
-    else:
-        video_in.open(0)
     if not video_in.isOpened():
         print "Could not open Video Stream.  Bad file name or missing camera."
         sys.exit(-1)
@@ -37,8 +32,19 @@ def get_frame(input):
     return frame
 
 if __name__ == '__main__':
-    record = len(sys.argv) >= 2 and sys.argv[1] == "--record"
-    record = True
+    parser=argparse.ArgumentParser(description="Track a red blob and adjust camera gimbal to follow")
+    parser.add_argument('-r','--record', action="store_true", default=False, help='record the output of the program to ../vids/demo_X.avi')
+    parser.add_argument('-i','--input', action="store", help='use a video file as an input instead of a webcam')
+    args = parser.parse_args()
+    
+    record = args.record
+    
+    video_in = cv2.VideoCapture()
+    if args.input != None:
+        video_in.open(args.input)
+    else:
+        video_in.open(0)
+        
     video_counter = len(glob.glob1("../vids", "*.avi"))
     file = "../vids/demo_" + str(video_counter) + ".avi"
     if record:
