@@ -17,6 +17,7 @@ print "Armed: %s" % v.armed
 print "waiting for ARM"
 #wait for vehicle to arm
 while not v.armed:
+    print v.armed
     pass
 
 print "ARMED"
