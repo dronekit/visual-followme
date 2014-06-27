@@ -20,6 +20,9 @@ def process_stream(video_in, loggers, vehicle=None):
     hist = hist.astype(np.float32, copy=False)
     frame_number = 0       
     
+    if loggers:
+        writeHeader()
+        
     while True:
         frame = get_frame(video_in)
         
@@ -39,11 +42,21 @@ def process_stream(video_in, loggers, vehicle=None):
     video_in.release()
     
 
+def writeHeader(loggers):
+    loggers[1].write("frame,datetime,pitch,roll,yaw,lat,lon,alt,is_relative;\n")
+
+def getAttitudeString(vehicle):
+    return str(vehicle.attitude.pitch)+","+str(vehicle.attitude.roll)+","+str(vehicle.attitude.yaw)
+
+
+def getLocationString(vehicle):
+    return str(vehicle.lat)+","+str(vehicle.lon)+","+str(vehicle.alt)+","+str(vehicle.is_relative)
+
 def processFrame(loggers, hist, frame_number, frame, vehicle):
     if loggers:
         loggers[0].write(frame)
         if vehicle:
-            loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ","+str(vehicle.attitude)+ ","+str(vehicle.location)+";\n")
+            loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ","+getAttitudeString(vehicle)+ ","+getLocationString(vehicle)+";\n")
         else:
             loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ";\n")
     target = detect_target(hist, frame)
