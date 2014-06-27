@@ -24,6 +24,7 @@ def main(video_in, loggers):
         frame = get_frame(video_in)
         
         processFrame(loggers, hist, frame_number, frame)
+        frame_number = frame_number + 1
         
         ch = 0xFF & cv2.waitKey(5)
         if ch == 27:
@@ -37,7 +38,6 @@ def processFrame(loggers, hist, frame_number, frame):
     if loggers:
         loggers[0].write(frame)
         loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ";\n")
-        frame_number = frame_number + 1
     target = detect_target(hist, frame)
     render_crosshairs(frame, target)
     cv2.imshow("frame", frame)
