@@ -21,7 +21,7 @@ def process_stream(video_in, loggers, vehicle=None):
     frame_number = 0       
     
     if loggers:
-        writeHeader()
+        writeHeader(loggers)
         
     while True:
         frame = get_frame(video_in)
