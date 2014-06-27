@@ -6,14 +6,17 @@ from datetime import datetime
 
 import cv2
 import glob
+import datetime
 import numpy as np
 
 from gui import render_crosshairs
 from redBlobDetection import detect_target
 
+
+
 def main():
     if not video_in.isOpened():
-        print "Could not open Video Stream.  Bad file name or missing camera."
+        print "Could not open Video Stream.  Bad filename name or missing camera."
         sys.exit(-1)
     hist = np.array([[255.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [255.]])
     hist = hist.astype(np.float32, copy=False)
@@ -38,10 +41,19 @@ def get_frame(input):
         sys.exit(0) 
     return frame
 
+def get_new_file_name():
+    video_counter = len(glob.glob1("../vids", "*.avi"))
+    filename = "demo_" + str(video_counter)
+    path = "../vids/"
+    return path+timeStamped(filename)+ ".avi"
+
+def timeStamped(fname, fmt='{fname}_%Y-%m-%d-%H-%M-%S'):
+    return datetime.datetime.now().strftime(fmt).format(fname=fname)
+
 if __name__ == '__main__':
     parser=argparse.ArgumentParser(description="Track a red blob and adjust camera gimbal to follow")
     parser.add_argument('-r','--record', action="store_true", default=False, help='record the output of the program to ../vids/demo_X.avi')
-    parser.add_argument('-i','--input', action="store", help='use a video file as an input instead of a webcam')
+    parser.add_argument('-i','--input', action="store", help='use a video filename as an input instead of a webcam')
     args = parser.parse_args()
     
     record = args.record
@@ -52,10 +64,9 @@ if __name__ == '__main__':
     else:
         video_in.open(0)
         
-    video_counter = len(glob.glob1("../vids", "*.avi"))
-    file = "../vids/demo_" + str(video_counter) + ".avi"
+    filename = get_new_file_name()
     if record:
-        writer = cv2.VideoWriter(filename=file,  # Provide a file to write the video to
+        writer = cv2.VideoWriter(filename=filename,  # Provide a file to write the video to
                              fourcc=cv2.cv.CV_FOURCC('P', 'I', 'M', '1'),  # bring up codec dialog box
                              fps=30,
                              frameSize=(640, 480))
