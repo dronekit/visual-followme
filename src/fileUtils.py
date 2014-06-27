@@ -5,7 +5,7 @@ import cv2
 
 def get_new_file_name():
     video_counter = len(glob.glob1("../vids", "*.avi"))
-    filename = "demo_" + str(video_counter)
+    filename = "demo_%03d"%video_counter
     path = "../vids/"
     return path+timeStamped(filename)+ ".avi"
 
