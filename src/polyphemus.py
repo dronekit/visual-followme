@@ -9,11 +9,12 @@ import numpy as np
 
 from gui import render_crosshairs
 from redBlobDetection import detect_target
-from fileUtils import get_new_file_name
+from fileUtils import getLoggers, closeloggers
 
 
 
-def main():
+
+def main(loggers):
     if not video_in.isOpened():
         print "Could not open Video Stream.  Bad filename name or missing camera."
         sys.exit(-1)
@@ -22,9 +23,9 @@ def main():
     frame_number=0       
     while True:
         frame = get_frame(video_in)
-        if args.record:
-            writer.write(frame)
-            f.write(str(frame_number) + "," + str(datetime.datetime.today()) + ";\n")
+        if loggers:
+            loggers[0].write(frame)
+            loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ";\n")
             frame_number = frame_number + 1
         target = detect_target(hist, frame)
         render_crosshairs(frame, target)
@@ -34,8 +35,8 @@ def main():
             return
 
 def get_frame(videoInput):
-    f, frame = videoInput.read()
-    if not f:
+    gotNewFrame, frame = videoInput.read()
+    if not gotNewFrame:
         print "Reached EOF or webcam disconnected"
         sys.exit(0) 
     return frame
@@ -46,27 +47,22 @@ if __name__ == '__main__':
     parser.add_argument('-i','--input', action="store", help='use a video filename as an input instead of a webcam')
     args = parser.parse_args()
     
-    
     video_in = cv2.VideoCapture()
+    
     if args.input != None:
         video_in.open(args.input)
     else:
         video_in.open(0)
-        
-    filename = get_new_file_name()
-    if args.record:
-        writer = cv2.VideoWriter(filename=filename,  # Provide a file to write the video to
-                             fourcc=cv2.cv.CV_FOURCC('P', 'I', 'M', '1'),  # bring up codec dialog box
-                             fps=30,
-                             frameSize=(640, 480))
-        f=open(filename[:-3]+"csv","w")
     
+    if args.record:
+        loggers = getLoggers()
+    else:
+        loggers = None  
     try:
-        main()
+        main(loggers)
     except KeyboardInterrupt:
         print "KeyboardInterrupt detected."
     cv2.destroyAllWindows()
     if args.record:
-        writer.release()
-        f.close()
+        closeloggers(loggers)
         
