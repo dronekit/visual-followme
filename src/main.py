@@ -27,5 +27,4 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print "KeyboardInterrupt detected."
     cv2.destroyAllWindows()
-    if args.record:
-        closeloggers(loggers)
+
