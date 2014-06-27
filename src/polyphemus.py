@@ -5,11 +5,11 @@ import datetime
 import sys
 
 import cv2
-import glob
 import numpy as np
 
 from gui import render_crosshairs
 from redBlobDetection import detect_target
+from fileUtils import get_new_file_name
 
 
 
@@ -33,21 +33,12 @@ def main():
         if ch == 27:
             return
 
-def get_frame(input):
-    f, frame = input.read()
+def get_frame(videoInput):
+    f, frame = videoInput.read()
     if not f:
         print "Reached EOF or webcam disconnected"
         sys.exit(0) 
     return frame
-
-def get_new_file_name():
-    video_counter = len(glob.glob1("../vids", "*.avi"))
-    filename = "demo_" + str(video_counter)
-    path = "../vids/"
-    return path+timeStamped(filename)+ ".avi"
-
-def timeStamped(fname, fmt='{fname}_%Y-%m-%d-%H-%M-%S'):
-    return datetime.datetime.now().strftime(fmt).format(fname=fname)
 
 if __name__ == '__main__':
     parser=argparse.ArgumentParser(description="Track a red blob and adjust camera gimbal to follow")
