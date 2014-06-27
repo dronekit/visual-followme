@@ -26,5 +26,4 @@ if __name__ == '__main__':
         process_stream(video_in, loggers)
     except KeyboardInterrupt:
         print "KeyboardInterrupt detected."
-    cv2.destroyAllWindows()
 
