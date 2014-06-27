@@ -36,6 +36,7 @@ def process_stream(video_in, loggers, vehicle=None):
     if loggers:
         closeloggers(loggers)
     cv2.destroyAllWindows()
+    video_in.release()
     
 
 def processFrame(loggers, hist, frame_number, frame):
