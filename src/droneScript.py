@@ -1,5 +1,6 @@
 from droneapi.lib import VehicleMode
 from pymavlink import mavutil
+import time
 
 
 # First get an instance of the API endpoint
@@ -17,14 +18,13 @@ print "Armed: %s" % v.armed
 print "waiting for ARM"
 #wait for vehicle to arm
 while not v.armed:
-    print v.armed
-    pass
+    time.sleep(0.001)
 
 print "ARMED"
 
 #wait for vehicle to disarm
 while v.armed:
-    pass
+    time.sleep(0.001)
 
 print "DISARMED"
 
