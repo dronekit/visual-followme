@@ -15,15 +15,10 @@ def getVehicle():
     return v
 
 def waitForArm(v):
-#wait for vehicle to arm
+# wait for vehicle to arm
     while not v.armed:
         time.sleep(0.001)
     print "ARMED"
-
-def waitForDisarm(v):
-    while v.armed:
-        time.sleep(0.001)
-    print "DISARMED"
 
 
 
@@ -32,10 +27,10 @@ print "DroneScript - Visual-Follow Running"
 v = getVehicle()
 
 # Print out some interesting stats about the vehicle
-#print "Mode: %s" % v.mode
-#print "Location: %s" % v.location
-#print "Attitude: %s" % v.attitude
-#print "Armed: %s" % v.armed
+# print "Mode: %s" % v.mode
+# print "Location: %s" % v.location
+# print "Attitude: %s" % v.attitude
+# print "Armed: %s" % v.armed
 
 
 
@@ -44,11 +39,9 @@ waitForArm(v)
 video_in = cv2.VideoCapture()
 video_in.open(0)
 
-loggers = getLoggers(path = "/home/odroid/Videos/")
+loggers = getLoggers(path="/home/odroid/Videos/")
 
-process_stream(video_in, loggers)
-
-waitForDisarm(v)
+process_stream(video_in, loggers, vehicle=v)
 
 
 

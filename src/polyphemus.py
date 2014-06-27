@@ -11,7 +11,7 @@ from fileUtils import closeloggers
 
 
 
-def process_stream(video_in, loggers):
+def process_stream(video_in, loggers, vehicle=None):
     if not video_in.isOpened():
         print "Could not open Video Stream.  Bad filename name or missing camera."
         sys.exit(-1)
@@ -26,6 +26,9 @@ def process_stream(video_in, loggers):
         processFrame(loggers, hist, frame_number, frame)
         frame_number = frame_number + 1
         
+        if vehicle:
+            if not vehicle.armed:
+                break
         ch = 0xFF & cv2.waitKey(5)
         if ch == 27:
             break        
