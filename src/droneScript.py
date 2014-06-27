@@ -10,7 +10,7 @@ from polyphemus import process_stream
 def getVehicle():
     # First get an instance of the API endpoint
     api = local_connect()  # @UndefinedVariable
-# get our vehicle - when running with mavproxy it only knows about one vehicle (for now)
+    # get our vehicle - when running with mavproxy it only knows about one vehicle (for now)
     v = api.get_vehicles()[0]
     return v
 
@@ -26,22 +26,15 @@ print "DroneScript - Visual-Follow Running"
 
 v = getVehicle()
 
-# Print out some interesting stats about the vehicle
-# print "Mode: %s" % v.mode
-# print "Location: %s" % v.location
-# print "Attitude: %s" % v.attitude
-# print "Armed: %s" % v.armed
-
-
-
-waitForArm(v)
-
-video_in = cv2.VideoCapture()
-video_in.open(0)
-
-loggers = getLoggers(path="/home/odroid/Videos/")
-
-process_stream(video_in, loggers, vehicle=v)
+while True:
+    waitForArm(v)
+    
+    video_in = cv2.VideoCapture()
+    video_in.open(0)
+    
+    loggers = getLoggers(path="/home/odroid/Videos/")
+    
+    process_stream(video_in, loggers, vehicle=v)
 
 
 
