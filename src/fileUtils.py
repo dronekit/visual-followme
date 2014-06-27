@@ -3,18 +3,17 @@ import datetime
 import glob
 import cv2
 
-def get_new_file_name():
+def get_new_file_name(path):
     video_counter = len(glob.glob1("../vids", "*.avi"))
     filename = "demo_%03d"%video_counter
-    path = "../vids/"
     return path+timeStamped(filename)+ ".avi"
 
 def timeStamped(fname, fmt='{fname}_%Y-%m-%d-%H-%M-%S'):
     return datetime.datetime.now().strftime(fmt).format(fname=fname)
 
 
-def getLoggers():
-    filename = get_new_file_name()
+def getLoggers(path = "../vids/"):
+    filename = get_new_file_name(path)
     videoWriter = cv2.VideoWriter(filename=filename, # Provide a file to write the video to
         fourcc=cv2.cv.CV_FOURCC('P', 'I', 'M', '1'), # bring up codec dialog box
         fps=30, 

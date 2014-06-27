@@ -44,7 +44,7 @@ waitForArm(v)
 video_in = cv2.VideoCapture()
 video_in.open(0)
 
-loggers = getLoggers()
+loggers = getLoggers(path = "/home/odroid/Videos/")
 
 process_stream(video_in, loggers)
 
