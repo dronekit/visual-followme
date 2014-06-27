@@ -23,7 +23,7 @@ def process_stream(video_in, loggers, vehicle=None):
     while True:
         frame = get_frame(video_in)
         
-        processFrame(loggers, hist, frame_number, frame)
+        processFrame(loggers, hist, frame_number, frame, vehicle)
         frame_number = frame_number + 1
         
         if vehicle:
@@ -39,10 +39,13 @@ def process_stream(video_in, loggers, vehicle=None):
     video_in.release()
     
 
-def processFrame(loggers, hist, frame_number, frame):
+def processFrame(loggers, hist, frame_number, frame, vehicle):
     if loggers:
         loggers[0].write(frame)
-        loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ";\n")
+        if vehicle:
+            loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ","+vehicle.attitude+ ","+vehicle.location+";\n")
+        else:
+            loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ";\n")
     target = detect_target(hist, frame)
     render_crosshairs(frame, target)
     cv2.imshow("frame", frame)
