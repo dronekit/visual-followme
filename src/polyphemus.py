@@ -22,7 +22,7 @@ def main():
     frame_number=0       
     while True:
         frame = get_frame(video_in)
-        if record:
+        if args.record:
             writer.write(frame)
             f.write(str(frame_number) + "," + str(datetime.datetime.today()) + ";\n")
             frame_number = frame_number + 1
@@ -46,7 +46,6 @@ if __name__ == '__main__':
     parser.add_argument('-i','--input', action="store", help='use a video filename as an input instead of a webcam')
     args = parser.parse_args()
     
-    record = args.record
     
     video_in = cv2.VideoCapture()
     if args.input != None:
@@ -55,7 +54,7 @@ if __name__ == '__main__':
         video_in.open(0)
         
     filename = get_new_file_name()
-    if record:
+    if args.record:
         writer = cv2.VideoWriter(filename=filename,  # Provide a file to write the video to
                              fourcc=cv2.cv.CV_FOURCC('P', 'I', 'M', '1'),  # bring up codec dialog box
                              fps=30,
@@ -67,7 +66,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print "KeyboardInterrupt detected."
     cv2.destroyAllWindows()
-    if record:
+    if args.record:
         writer.release()
         f.close()
         
