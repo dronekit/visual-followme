@@ -43,7 +43,7 @@ def processFrame(loggers, hist, frame_number, frame, vehicle):
     if loggers:
         loggers[0].write(frame)
         if vehicle:
-            loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ","+vehicle.attitude+ ","+vehicle.location+";\n")
+            loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ","+str(vehicle.attitude)+ ","+str(vehicle.location)+";\n")
         else:
             loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ";\n")
     target = detect_target(hist, frame)
