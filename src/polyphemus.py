@@ -1,12 +1,11 @@
 #!/usr/bin/python
 
-import sys
 import argparse
-from datetime import datetime
+import datetime
+import sys
 
 import cv2
 import glob
-import datetime
 import numpy as np
 
 from gui import render_crosshairs
@@ -25,7 +24,7 @@ def main():
         frame = get_frame(video_in)
         if record:
             writer.write(frame)
-            f.write(str(frame_number) + "," + str(datetime.today()) + ";\n")
+            f.write(str(frame_number) + "," + str(datetime.datetime.today()) + ";\n")
             frame_number = frame_number + 1
         target = detect_target(hist, frame)
         render_crosshairs(frame, target)
@@ -70,7 +69,7 @@ if __name__ == '__main__':
                              fourcc=cv2.cv.CV_FOURCC('P', 'I', 'M', '1'),  # bring up codec dialog box
                              fps=30,
                              frameSize=(640, 480))
-        f=open("../vids/demo_" + str(video_counter) + ".csv","w")
+        f=open(filename[:-3]+"csv","w")
     
     try:
         main()
