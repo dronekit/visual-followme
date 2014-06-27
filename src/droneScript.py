@@ -12,5 +12,19 @@ v = api.get_vehicles()[0]
 print "Mode: %s" % v.mode
 print "Location: %s" % v.location
 print "Attitude: %s" % v.attitude
-print "GPS: %s" % v.gps_0
 print "Armed: %s" % v.armed
+
+print "waiting for ARM"
+#wait for vehicle to arm
+while not v.armed:
+    pass
+
+print "ARMED"
+
+#wait for vehicle to disarm
+while v.armed:
+    pass
+
+print "DISARMED"
+
+
