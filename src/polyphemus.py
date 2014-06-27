@@ -50,7 +50,7 @@ def getAttitudeString(vehicle):
 
 
 def getLocationString(vehicle):
-    return str(vehicle.lat)+","+str(vehicle.lon)+","+str(vehicle.alt)+","+str(vehicle.is_relative)
+    return str(vehicle.location.lat)+","+str(vehicle.location.lon)+","+str(vehicle.location.alt)+","+str(vehicle.location.is_relative)
 
 def processFrame(loggers, hist, frame_number, frame, vehicle):
     if loggers:
