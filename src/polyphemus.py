@@ -2,6 +2,7 @@
 
 import sys
 import argparse
+from datetime import datetime
 
 import cv2
 import glob
@@ -16,10 +17,13 @@ def main():
         sys.exit(-1)
     hist = np.array([[255.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [255.]])
     hist = hist.astype(np.float32, copy=False)
+    frame_number=0       
     while True:
         frame = get_frame(video_in)
         if record:
             writer.write(frame)
+            f.write(str(frame_number) + "," + str(datetime.today()) + ";\n")
+            frame_number = frame_number + 1
         target = detect_target(hist, frame)
         render_crosshairs(frame, target)
         cv2.imshow("frame", frame)
@@ -55,6 +59,8 @@ if __name__ == '__main__':
                              fourcc=cv2.cv.CV_FOURCC('P', 'I', 'M', '1'),  # bring up codec dialog box
                              fps=30,
                              frameSize=(640, 480))
+        f=open("../vids/demo_" + str(video_counter) + ".csv","w")
+    
     try:
         main()
     except KeyboardInterrupt:
@@ -62,4 +68,5 @@ if __name__ == '__main__':
     cv2.destroyAllWindows()
     if record:
         writer.release()
+        f.close()
         
