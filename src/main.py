@@ -2,7 +2,7 @@ import argparse
 import cv2
 
 from fileUtils import getLoggers, closeloggers
-from polyphemus import main
+from polyphemus import process_stream
 
 
 if __name__ == '__main__':
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     else:
         loggers = None  
     try:
-        main(video_in, loggers)
+        process_stream(video_in, loggers)
     except KeyboardInterrupt:
         print "KeyboardInterrupt detected."
     cv2.destroyAllWindows()

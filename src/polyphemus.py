@@ -11,7 +11,7 @@ from fileUtils import closeloggers
 
 
 
-def main(video_in, loggers):
+def process_stream(video_in, loggers):
     if not video_in.isOpened():
         print "Could not open Video Stream.  Bad filename name or missing camera."
         sys.exit(-1)

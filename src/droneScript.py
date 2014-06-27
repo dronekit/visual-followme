@@ -1,6 +1,10 @@
+import cv2
 from droneapi.lib import VehicleMode
 from pymavlink import mavutil
 import time
+
+from fileUtils import getLoggers
+from polyphemus import process_stream
 
 
 def getVehicle():
@@ -37,7 +41,12 @@ v = getVehicle()
 
 waitForArm(v)
 
+video_in = cv2.VideoCapture()
+video_in.open(0)
 
+loggers = getLoggers()
+
+process_stream(video_in, loggers)
 
 waitForDisarm(v)
 
