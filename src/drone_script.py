@@ -1,7 +1,7 @@
 import cv2
 import time
 
-from fileUtils import getLoggers
+from file_utils import getLoggers
 from polyphemus import process_stream
 
 

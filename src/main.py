@@ -1,7 +1,7 @@
 import argparse
 import cv2
 
-from fileUtils import getLoggers
+from file_utils import getLoggers
 from polyphemus import process_stream
 
 
