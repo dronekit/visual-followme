@@ -1,5 +1,5 @@
-
 import cv2
+
 
 def render_crosshairs(frame, biggest_contour):
     if biggest_contour != None:

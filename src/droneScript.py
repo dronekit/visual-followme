@@ -1,6 +1,4 @@
 import cv2
-from droneapi.lib import VehicleMode
-from pymavlink import mavutil
 import time
 
 from fileUtils import getLoggers

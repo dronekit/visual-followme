@@ -1,14 +1,11 @@
-#!/usr/bin/python
-
 import cv2
 import datetime
 import sys
 
+from fileUtils import closeloggers
 from gui import render_crosshairs
 import numpy as np
 from redBlobDetection import detect_target
-from fileUtils import closeloggers
-
 
 
 def process_stream(video_in, loggers, vehicle=None):

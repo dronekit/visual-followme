@@ -1,6 +1,7 @@
-
 import cv2
+
 import numpy as np
+
 
 def detect_target(hist, frame):
     prob = filter_red_pixels(hist, frame)

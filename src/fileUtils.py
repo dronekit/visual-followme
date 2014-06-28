@@ -1,7 +1,7 @@
-
+import cv2
 import datetime
 import glob
-import cv2
+
 
 def get_new_file_name(path):
     video_counter = len(glob.glob1(path, "*.avi"))
