@@ -1,7 +1,7 @@
 import argparse
 import cv2
 
-from file_utils import getLoggers
+from file_utils import get_loggers
 from polyphemus import process_stream
 
 
@@ -19,7 +19,7 @@ if __name__ == '__main__':
         video_in.open(0)
     
     if args.record:
-        loggers = getLoggers()
+        loggers = get_loggers()
     else:
         loggers = None  
     try:

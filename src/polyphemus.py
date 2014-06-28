@@ -2,7 +2,7 @@ import cv2
 import datetime
 import sys
 
-from file_utils import closeloggers
+from file_utils import close_loggers
 from gui import render_crosshairs
 import numpy as np
 from red_blob_detection import detect_target
@@ -18,12 +18,12 @@ def process_stream(video_in, loggers, vehicle=None):
     frame_number = 0       
     
     if loggers:
-        writeHeader(loggers)
+        write_header(loggers)
         
     while True:
         frame = get_frame(video_in)
         
-        processFrame(loggers, hist, frame_number, frame, vehicle)
+        process_frame(loggers, hist, frame_number, frame, vehicle)
         frame_number = frame_number + 1
         
         if vehicle:
@@ -34,26 +34,26 @@ def process_stream(video_in, loggers, vehicle=None):
             break        
     
     if loggers:
-        closeloggers(loggers)
+        close_loggers(loggers)
     cv2.destroyAllWindows()
     video_in.release()
     
 
-def writeHeader(loggers):
+def write_header(loggers):
     loggers[1].write("frame,datetime,pitch,roll,yaw,lat,lon,alt,is_relative;\n")
 
-def getAttitudeString(vehicle):
+def get_attitude_string(vehicle):
     return str(vehicle.attitude.pitch)+","+str(vehicle.attitude.roll)+","+str(vehicle.attitude.yaw)
 
 
-def getLocationString(vehicle):
+def get_location_string(vehicle):
     return str(vehicle.location.lat)+","+str(vehicle.location.lon)+","+str(vehicle.location.alt)+","+str(vehicle.location.is_relative)
 
-def processFrame(loggers, hist, frame_number, frame, vehicle):
+def process_frame(loggers, hist, frame_number, frame, vehicle):
     if loggers:
         loggers[0].write(frame)
         if vehicle:
-            loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ","+getAttitudeString(vehicle)+ ","+getLocationString(vehicle)+";\n")
+            loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ","+get_attitude_string(vehicle)+ ","+get_location_string(vehicle)+";\n")
         else:
             loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ";\n")
     target = detect_target(hist, frame)
@@ -66,5 +66,3 @@ def get_frame(videoInput):
         print "Reached EOF or webcam disconnected"
         sys.exit(0) 
     return frame
-
-        
