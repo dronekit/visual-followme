@@ -8,6 +8,9 @@ import numpy as np
 from red_blob_detection import detect_target
 
 ref =  240       
+integral = 0.0
+kp = 0.2
+ki = 0.05
 
 
 def move_camera(vehicle, pwm):
@@ -33,9 +36,9 @@ def process_stream(video_in, loggers, vehicle=None):
         process_frame(loggers, hist, frame_number, frame, vehicle)
         frame_number = frame_number + 1
         
-        if vehicle:
-            if not vehicle.armed:
-                break
+        #if vehicle:
+        #    if not vehicle.armed:
+        #        break
         ch = 0xFF & cv2.waitKey(5)
         if ch == 27:
             break        
@@ -64,9 +67,14 @@ def camera_pid(target, vehicle):
             cx, cy = int(contour_centroid['m10'] / contour_centroid['m00']), int(contour_centroid['m01'] / contour_centroid['m00'])
             
             error = ref - cy
-            
-            pwm = 1500 + error 
+
+	    global integral
+	    integral = integral + error    
+
+            pwm = 1500 + error*kp + integral*ki 
             move_camera(vehicle, pwm)
+
+	    print 'Y %d, error %d, pwm %d -'%(cy,error,pwm)+'|'*int((pwm-1200)/6)
         except ZeroDivisionError:
             pass
     

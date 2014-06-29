@@ -4,6 +4,7 @@ import time
 from file_utils import get_loggers
 from polyphemus import process_stream
 
+import polyphemus
 
 def get_vehicle():
     # First get an instance of the API endpoint
@@ -23,8 +24,9 @@ print "DroneScript - Visual-Follow Running"
 v = get_vehicle()
 
 while True:
-    wait_for_arm(v)
-    
+    #wait_for_arm(v)
+    time.sleep(1)    
+
     video_in = cv2.VideoCapture()
     video_in.open(0)
     
