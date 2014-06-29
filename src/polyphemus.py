@@ -8,6 +8,12 @@ import numpy as np
 from red_blob_detection import detect_target
 
 
+
+def move_camera(vehicle, pwm):
+    msg = vehicle.message_factory.rc_channels_override_encode(1, 1, 0, 0, 0, 0, 0, pwm, 0, 0)
+    vehicle.send_mavlink(msg)
+    vehicle.flush()
+
 def process_stream(video_in, loggers, vehicle=None):
     if not video_in.isOpened():
         print "Could not open Video Stream.  Bad filename name or missing camera."
@@ -25,6 +31,10 @@ def process_stream(video_in, loggers, vehicle=None):
         
         process_frame(loggers, hist, frame_number, frame, vehicle)
         frame_number = frame_number + 1
+        
+        pwm = 1300 + (frame_number % 500)
+        move_camera(vehicle, pwm)
+
         
         if vehicle:
             if not vehicle.armed:

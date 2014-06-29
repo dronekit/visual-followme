@@ -22,8 +22,8 @@ def wait_for_arm(v):
 print "DroneScript - Visual-Follow Running"
 v = get_vehicle()
 
+wait_for_arm(v)
 while True:
-    wait_for_arm(v)
     
     video_in = cv2.VideoCapture()
     video_in.open(0)
