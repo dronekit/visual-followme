@@ -7,12 +7,12 @@ from gui import render_crosshairs
 import numpy as np
 from red_blob_detection import detect_target
 
-ref =  240       
+ref =  240
 integral = 0.0
 previus_error = 0.0
-kp = 0.2
+kp = 0.36
 ki = 0.05
-kd = 0.2
+kd = 0.2*1.2
 
 
 def move_camera(vehicle, pwm):
