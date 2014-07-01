@@ -49,7 +49,7 @@ def detect_biggest_polygon(binary_img):
     return biggest_contour
 
 def target_coordinates(target):
-    if not target:
+    if target == None:
             return None
     contour_centroid = cv2.moments(target)
     try:
