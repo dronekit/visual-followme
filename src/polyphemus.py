@@ -2,13 +2,13 @@ import cv2
 import sys
 
 from gui import render_crosshairs
-import numpy as np
-from red_blob_detection import detect_target
 from pid import Pid, print_graph
+from red_blob_detection import RedBlobDetector
 
 
 controller = Pid(kp=0.36, ki=0.05, kd=2.4)
 
+vision_algorithm = RedBlobDetector()
 
 def move_camera(vehicle, pwm):
     if vehicle:
@@ -21,13 +21,11 @@ def process_stream(video_in, logger, vehicle=None):
         print "Could not open Video Stream.  Bad filename name or missing camera."
         sys.exit(-1)
     
-    hist = np.array([[255.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [255.]])
-    hist = hist.astype(np.float32, copy=False) 
     
     while True:
         frame = get_frame(video_in)
         
-        process_frame(logger, hist,  frame, vehicle)
+        process_frame(logger, frame, vehicle)
         
         # if vehicle:
         #    if not vehicle.armed:
@@ -57,11 +55,11 @@ def camera_pid(target, vehicle):
             pass    
 
 
-def process_frame(logger, hist, frame, vehicle):
+def process_frame(logger, frame, vehicle):
     if logger:
         logger.log(frame,vehicle)
         
-    target = detect_target(hist, frame)
+    target = vision_algorithm.detect_target(frame)
     
     camera_pid(target, vehicle)
     
