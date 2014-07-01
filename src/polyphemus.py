@@ -24,9 +24,6 @@ def process_stream(video_in, logger, vehicle=None):
     hist = np.array([[255.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [255.]])
     hist = hist.astype(np.float32, copy=False) 
     
-    if logger:
-        logger.write_header()
-
     while True:
         frame = get_frame(video_in)
         
