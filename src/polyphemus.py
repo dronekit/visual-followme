@@ -39,17 +39,12 @@ def process_stream(video_in, logger, vehicle=None):
     cv2.destroyAllWindows()
     video_in.release()
 
-
-def camera_pid(target, vehicle):
-    if target != None:
-        _, cy = target
-            
-        control = controller.compute(cy, 240)
-        pwm = control+1500
-        move_camera(vehicle, pwm)
-
-        print_graph(cy,pwm) 
-
+def get_frame(videoInput):
+    gotNewFrame, frame = videoInput.read()
+    if not gotNewFrame:
+        print "Reached EOF or webcam disconnected"
+        sys.exit(0) 
+    return frame
 
 def process_frame(logger, frame, vehicle):
     if logger:
@@ -62,9 +57,12 @@ def process_frame(logger, frame, vehicle):
     render_crosshairs(frame, target)
     cv2.imshow("frame", frame)
 
-def get_frame(videoInput):
-    gotNewFrame, frame = videoInput.read()
-    if not gotNewFrame:
-        print "Reached EOF or webcam disconnected"
-        sys.exit(0) 
-    return frame
+def camera_pid(target, vehicle):
+    if target != None:
+        _, cy = target
+            
+        control = controller.compute(cy, 240)
+        pwm = control+1500
+        move_camera(vehicle, pwm)
+
+        print_graph(cy,pwm) 
