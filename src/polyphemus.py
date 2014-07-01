@@ -42,17 +42,13 @@ def process_stream(video_in, logger, vehicle=None):
 
 def camera_pid(target, vehicle):
     if target != None:
-        contour_centroid = cv2.moments(target)
-        try:
-            _, cy = int(contour_centroid['m10'] / contour_centroid['m00']), int(contour_centroid['m01'] / contour_centroid['m00'])
+        _, cy = target
             
-            control = controller.compute(cy, 240)
-            pwm = control+1500
-            move_camera(vehicle, pwm)
+        control = controller.compute(cy, 240)
+        pwm = control+1500
+        move_camera(vehicle, pwm)
 
-            print_graph(cy,pwm)
-        except ZeroDivisionError:
-            pass    
+        print_graph(cy,pwm) 
 
 
 def process_frame(logger, frame, vehicle):

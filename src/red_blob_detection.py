@@ -2,6 +2,7 @@ import cv2
 
 import numpy as np
 
+
 class RedBlobDetector:
     hist = np.array([[255.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [255.]])
     hist = hist.astype(np.float32, copy=False) 
@@ -10,7 +11,8 @@ class RedBlobDetector:
         prob = filter_red_pixels(self.hist, frame)
         binary_img = clean_up_with_morphology(prob)
         target = detect_biggest_polygon(binary_img)
-        return target
+        return target_coordinates(target)
+        
 
 def filter_red_pixels(hist, frame):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -45,3 +47,13 @@ def detect_biggest_polygon(binary_img):
         
         biggest_contour = contours[biggest_contour_index]
     return biggest_contour
+
+def target_coordinates(target):
+    if not target:
+            return None
+    contour_centroid = cv2.moments(target)
+    try:
+        cx, cy = int(contour_centroid['m10'] / contour_centroid['m00']), int(contour_centroid['m01'] / contour_centroid['m00'])
+        return (cx,cy)
+    except ZeroDivisionError:
+        return None
