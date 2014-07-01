@@ -7,12 +7,25 @@ from gui import render_crosshairs
 import numpy as np
 from red_blob_detection import detect_target
 
-ref =  240
-integral = 0.0
-previus_error = 0.0
-kp = 0.36
-ki = 0.05
-kd = 0.2*1.2
+class pid:
+    ref = 240    
+    integral = 0.0
+    previus_error = 0.0
+
+    def __init__(self, kp, ki, kd):
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
+        
+    def compute(self, output, reference):
+        error = reference - output
+        self.integral = self.integral + error    
+        derivative = (error - self.previus_error)
+        control = error * self.kp + self.integral * self.ki + derivative * self.kd
+        self.previus_error = error
+        return control
+
+controller = pid(kp=0.36, ki=0.05, kd=2.4)
 
 
 def move_camera(vehicle, pwm):
@@ -39,7 +52,7 @@ def process_stream(video_in, loggers, vehicle=None):
         process_frame(loggers, hist, frame_number, frame, vehicle)
         frame_number = frame_number + 1
         
-        #if vehicle:
+        # if vehicle:
         #    if not vehicle.armed:
         #        break
         ch = 0xFF & cv2.waitKey(5)
@@ -56,47 +69,39 @@ def write_header(loggers):
     loggers[1].write("frame,datetime,pitch,roll,yaw,lat,lon,alt,is_relative;\n")
 
 def get_attitude_string(vehicle):
-    return str(vehicle.attitude.pitch)+","+str(vehicle.attitude.roll)+","+str(vehicle.attitude.yaw)
+    return str(vehicle.attitude.pitch) + "," + str(vehicle.attitude.roll) + "," + str(vehicle.attitude.yaw)
 
 
 def get_location_string(vehicle):
-    return str(vehicle.location.lat)+","+str(vehicle.location.lon)+","+str(vehicle.location.alt)+","+str(vehicle.location.is_relative)
+    return str(vehicle.location.lat) + "," + str(vehicle.location.lon) + "," + str(vehicle.location.alt) + "," + str(vehicle.location.is_relative)
 
 
 def camera_pid(target, vehicle):
     if target != None:
         contour_centroid = cv2.moments(target)
         try:
-            cx, cy = int(contour_centroid['m10'] / contour_centroid['m00']), int(contour_centroid['m01'] / contour_centroid['m00'])
+            _, cy = int(contour_centroid['m10'] / contour_centroid['m00']), int(contour_centroid['m01'] / contour_centroid['m00'])
             
-            error = ref - cy
-
-	    global integral
-	    global previus_error
-	    integral = integral + error    
-	    derivative = (error - previus_error)
-	    previus_error = error
-
-            pwm = 1500 + error*kp + integral*ki +derivative*kd
+            control = controller.compute(cy, 240)
+            pwm = control+1500
             move_camera(vehicle, pwm)
 
-	    graph = '|'*int((cy)/2)
-	    print 'Y %d,\terror %d,\tpwm %d \t-'%(cy,error,pwm)+graph
+            graph = '|' * int((cy) / 2)
+            print 'Y %d,\tpwm %d -' % (cy, pwm) + graph
         except ZeroDivisionError:
-            pass
-    
+            pass    
 
 
 def process_frame(loggers, hist, frame_number, frame, vehicle):
     if loggers:
         loggers[0].write(frame)
         if vehicle:
-            loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ","+get_attitude_string(vehicle)+ ","+get_location_string(vehicle)+";\n")
+            loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + "," + get_attitude_string(vehicle) + "," + get_location_string(vehicle) + ";\n")
         else:
             loggers[1].write(str(frame_number) + "," + str(datetime.datetime.today()) + ";\n")
     target = detect_target(hist, frame)
     
-    camera_pid(target,vehicle)
+    camera_pid(target, vehicle)
     
     render_crosshairs(frame, target)
     cv2.imshow("frame", frame)
