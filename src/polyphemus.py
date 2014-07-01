@@ -6,9 +6,9 @@ from file_utils import close_loggers
 from gui import render_crosshairs
 import numpy as np
 from red_blob_detection import detect_target
-from pid import pid, print_graph
+from Pid import Pid, print_graph
 
-controller = pid(kp=0.36, ki=0.05, kd=2.4)
+controller = Pid(kp=0.36, ki=0.05, kd=2.4)
 
 
 def move_camera(vehicle, pwm):

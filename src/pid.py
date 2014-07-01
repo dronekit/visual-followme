@@ -1,4 +1,4 @@
-class pid:
+class Pid:
     ref = 240    
     integral = 0.0
     previus_error = 0.0
