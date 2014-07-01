@@ -6,24 +6,7 @@ from file_utils import close_loggers
 from gui import render_crosshairs
 import numpy as np
 from red_blob_detection import detect_target
-
-class pid:
-    ref = 240    
-    integral = 0.0
-    previus_error = 0.0
-
-    def __init__(self, kp, ki, kd):
-        self.kp = kp
-        self.ki = ki
-        self.kd = kd
-        
-    def compute(self, output, reference):
-        error = reference - output
-        self.integral = self.integral + error    
-        derivative = (error - self.previus_error)
-        control = error * self.kp + self.integral * self.ki + derivative * self.kd
-        self.previus_error = error
-        return control
+from pid import pid, print_graph
 
 controller = pid(kp=0.36, ki=0.05, kd=2.4)
 
@@ -86,8 +69,7 @@ def camera_pid(target, vehicle):
             pwm = control+1500
             move_camera(vehicle, pwm)
 
-            graph = '|' * int((cy) / 2)
-            print 'Y %d,\tpwm %d -' % (cy, pwm) + graph
+            print_graph(cy,pwm)
         except ZeroDivisionError:
             pass    
 
