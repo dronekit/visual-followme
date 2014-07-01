@@ -27,9 +27,9 @@ def process_stream(video_in, logger, vehicle=None):
         
         process_frame(logger, frame, vehicle)
         
-        # if vehicle:
-        #    if not vehicle.armed:
-        #        break
+        if vehicle:
+            if not vehicle.armed:
+                break
         ch = 0xFF & cv2.waitKey(5)
         if ch == 27:
             break        
