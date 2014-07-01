@@ -1,10 +1,8 @@
 import cv2
 import time
 
-from file_utils import get_loggers
+from file_utils import Logger
 from polyphemus import process_stream
-
-import polyphemus
 
 def get_vehicle():
     # First get an instance of the API endpoint
@@ -30,6 +28,6 @@ while True:
     video_in = cv2.VideoCapture()
     video_in.open(0)
     
-    loggers = get_loggers(path="/home/odroid/Videos/")
+    logger = Logger(path="/home/odroid/Videos/")
     
-    process_stream(video_in, loggers, vehicle=v)
+    process_stream(video_in, logger, vehicle=v)
