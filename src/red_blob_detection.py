@@ -3,11 +3,16 @@ import cv2
 import numpy as np
 
 
-def detect_target(hist, frame):
-    prob = filter_red_pixels(hist, frame)
-    binary_img = clean_up_with_morphology(prob)
-    target = detect_biggest_polygon(binary_img)
-    return target
+class RedBlobDetector:
+    hist = np.array([[255.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [0.], [255.]])
+    hist = hist.astype(np.float32, copy=False) 
+
+    def detect_target(self,frame):
+        prob = filter_red_pixels(self.hist, frame)
+        binary_img = clean_up_with_morphology(prob)
+        target = detect_biggest_polygon(binary_img)
+        return target_coordinates(target)
+        
 
 def filter_red_pixels(hist, frame):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -32,7 +37,7 @@ def clean_up_with_morphology(prob):
 
 def detect_biggest_polygon(binary_img):
     binary_img_to_process = binary_img.copy()  # contour detection will mess up the image
-    contours, hierarchy = cv2.findContours(binary_img_to_process, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(binary_img_to_process, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     biggest_contour = None
     if contours != []:
         biggest_contour_index = 0
@@ -42,3 +47,13 @@ def detect_biggest_polygon(binary_img):
         
         biggest_contour = contours[biggest_contour_index]
     return biggest_contour
+
+def target_coordinates(target):
+    if target == None:
+            return None
+    contour_centroid = cv2.moments(target)
+    try:
+        cx, cy = int(contour_centroid['m10'] / contour_centroid['m00']), int(contour_centroid['m01'] / contour_centroid['m00'])
+        return (cx,cy)
+    except ZeroDivisionError:
+        return None

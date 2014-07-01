@@ -1,8 +1,9 @@
 import argparse
 import cv2
 
-from file_utils import get_loggers
+
 from polyphemus import process_stream
+from file_utils import Logger
 
 
 if __name__ == '__main__':
@@ -19,11 +20,11 @@ if __name__ == '__main__':
         video_in.open(0)
     
     if args.record:
-        loggers = get_loggers()
+        logger = Logger()
     else:
-        loggers = None  
+        logger = None  
     try:
-        process_stream(video_in, loggers)
+        process_stream(video_in, logger)
     except KeyboardInterrupt:
         print "KeyboardInterrupt detected."
 
