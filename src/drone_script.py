@@ -6,6 +6,8 @@ import os
 from file_utils import Logger
 from polyphemus import process_stream
 
+mustarm = False
+
 def get_vehicle():
     api = local_connect()  # @UndefinedVariable
     v = api.get_vehicles()[0]
@@ -25,7 +27,6 @@ def open_camera():
     c = cv2.VideoCapture()
     # We start our search with higher numbered (likely external) cameras
     for cnum in range(0, numCameras):
-        print "looking for", cnum
         c.open(numCameras - cnum - 1)
         if c.isOpened():
             return c
@@ -36,11 +37,11 @@ print "DroneScript - Visual-Follow Running"
 v = get_vehicle()
 
 while True:
-    wait_for_arm(v)    
-
-    video_in = open_camera()
+    if mustarm:
+        wait_for_arm(v)    
     
+    video_in = open_camera()
     homedir = os.path.expanduser("~")
     logger = Logger(path= homedir + "/Videos/")
     
-    process_stream(video_in, logger, vehicle=v)
+    process_stream(video_in, logger, vehicle=v, require_arming=mustarm)

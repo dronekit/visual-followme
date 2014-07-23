@@ -24,7 +24,7 @@ def disable_camera(vehicle):
         vehicle.flush()
 
 
-def process_stream(video_in, logger, vehicle=None):
+def process_stream(video_in, logger, vehicle=None, require_arming=False):
     if not video_in.isOpened():
         raise Exception("Could not open Video Stream.  Bad filename name or missing camera.")
     
@@ -34,7 +34,7 @@ def process_stream(video_in, logger, vehicle=None):
         process_frame(logger, frame, vehicle)
         
         if vehicle:
-            if not vehicle.armed:
+            if require_arming and not vehicle.armed:
                 break
         ch = 0xFF & cv2.waitKey(5)
         if ch == 27:
@@ -42,6 +42,7 @@ def process_stream(video_in, logger, vehicle=None):
 
     disable_camera(vehicle)
 
+    print "Done with stream"
     if logger:
         logger.close()
     cv2.destroyAllWindows()
