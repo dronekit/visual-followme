@@ -23,8 +23,10 @@ def open_camera():
     numCameras = len(filter(lambda s: s.startswith("video"), os.listdir("/dev")))
 
     c = cv2.VideoCapture()
+    # We start our search with higher numbered (likely external) cameras
     for cnum in range(0, numCameras):
-        c.open(0)
+        print "looking for", cnum
+        c.open(numCameras - cnum - 1)
         if c.isOpened():
             return c
 
