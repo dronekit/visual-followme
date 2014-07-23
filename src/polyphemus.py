@@ -12,6 +12,7 @@ vision_algorithm = RedBlobDetector()
 
 def move_camera(vehicle, pwm):
     if vehicle:
+        pwm = max(pwm, 1) # Ensure we never ask for negative or zero pwm values
         msg = vehicle.message_factory.rc_channels_override_encode(1, 1, 0, 0, 0, 0, 0, pwm, 0, 0)
         vehicle.send_mavlink(msg)
         vehicle.flush()
