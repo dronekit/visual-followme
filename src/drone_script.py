@@ -12,6 +12,7 @@ def get_vehicle():
     return v
 
 def wait_for_arm(v):
+    print "Waiting for arming"
     while not v.armed:
         time.sleep(0.001)
     print "ARMED"
