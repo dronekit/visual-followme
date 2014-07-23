@@ -5,6 +5,8 @@ from gui import render_crosshairs
 from pid import Pid, print_graph
 from red_blob_detection import RedBlobDetector
 
+# Set to false if you don't want to show any windows
+showGUI = True
 
 controller = Pid(kp=0.2, ki=0.05, kd=0.2)
 
@@ -62,9 +64,10 @@ def process_frame(logger, frame, vehicle):
     target = vision_algorithm.detect_target(frame)
     
     camera_pid(target, vehicle)
-    
-    render_crosshairs(frame, target)
-    cv2.imshow("frame", frame)
+   
+    render_crosshairs(frame, target)    
+    if showGUI:
+        cv2.imshow("frame", frame)
 
 def camera_pid(target, vehicle):
     if target != None:
