@@ -1,5 +1,6 @@
 import cv2
 import time
+import os.path
 
 from file_utils import Logger
 from polyphemus import process_stream
@@ -24,6 +25,7 @@ while True:
     video_in = cv2.VideoCapture()
     video_in.open(0)
     
-    logger = Logger(path="/home/odroid/Videos/")
+    homedir = os.path.expanduser("~")
+    logger = Logger(path= homedir + "/Videos/")
     
     process_stream(video_in, logger, vehicle=v)
