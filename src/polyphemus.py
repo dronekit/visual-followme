@@ -25,9 +25,7 @@ def disable_camera(vehicle):
 
 def process_stream(video_in, logger, vehicle=None):
     if not video_in.isOpened():
-        print "Could not open Video Stream.  Bad filename name or missing camera."
-        sys.exit(-1)
-    
+        raise Exception("Could not open Video Stream.  Bad filename name or missing camera.")
     
     while True:
         frame = get_frame(video_in)
