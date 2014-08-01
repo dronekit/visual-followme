@@ -5,6 +5,8 @@ from gui import render_crosshairs
 from pid import Pid, print_graph
 from red_blob_detection import RedBlobDetector
 
+# Set to false if you don't want to show any windows
+showGUI = True
 
 controller = Pid(kp=0.2, ki=0.05, kd=0.2)
 
@@ -12,6 +14,7 @@ vision_algorithm = RedBlobDetector()
 
 def move_camera(vehicle, pwm):
     if vehicle:
+        pwm = max(pwm, 1) # Ensure we never ask for negative or zero pwm values
         msg = vehicle.message_factory.rc_channels_override_encode(1, 1, 0, 0, 0, 0, 0, pwm, 0, 0)
         vehicle.send_mavlink(msg)
         vehicle.flush()
@@ -23,11 +26,9 @@ def disable_camera(vehicle):
         vehicle.flush()
 
 
-def process_stream(video_in, logger, vehicle=None):
+def process_stream(video_in, logger, vehicle=None, require_arming=False):
     if not video_in.isOpened():
-        print "Could not open Video Stream.  Bad filename name or missing camera."
-        sys.exit(-1)
-    
+        raise Exception("Could not open Video Stream.  Bad filename name or missing camera.")
     
     while True:
         frame = get_frame(video_in)
@@ -35,7 +36,7 @@ def process_stream(video_in, logger, vehicle=None):
         process_frame(logger, frame, vehicle)
         
         if vehicle:
-            if not vehicle.armed:
+            if require_arming and not vehicle.armed:
                 break
         ch = 0xFF & cv2.waitKey(5)
         if ch == 27:
@@ -43,6 +44,7 @@ def process_stream(video_in, logger, vehicle=None):
 
     disable_camera(vehicle)
 
+    print "Done with stream"
     if logger:
         logger.close()
     cv2.destroyAllWindows()
@@ -62,9 +64,10 @@ def process_frame(logger, frame, vehicle):
     target = vision_algorithm.detect_target(frame)
     
     camera_pid(target, vehicle)
-    
-    render_crosshairs(frame, target)
-    cv2.imshow("frame", frame)
+   
+    render_crosshairs(frame, target)    
+    if showGUI:
+        cv2.imshow("frame", frame)
 
 def camera_pid(target, vehicle):
     if target != None:
