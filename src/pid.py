@@ -11,6 +11,7 @@ class Pid:
     def compute(self, output, reference):
         error = reference - output
         self.integral = self.integral + error    
+        self.integral = max(min(10000, self.integral), 0)
         derivative = (error - self.previus_error)
         control = error * self.kp + self.integral * self.ki + derivative * self.kd
         self.previus_error = error
